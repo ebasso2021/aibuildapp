@@ -318,7 +318,41 @@
     <div id="contact" style="background:linear-gradient(120deg, #131A33, #1B1030); border:1px solid rgba(255,255,255,0.08); border-radius:24px; padding:64px; text-align:center;">
       <h2 style="font-size:34px; color:#F5F7FB; font-weight:700; max-width:560px; margin:0 auto;">Have a website, app, or IoT project that needs AI?</h2>
       <p style="font-size:16px; color:#AEB8CE; max-width:480px; margin:16px auto 0;">Tell us what you're working with — we'll show you what an AI-powered rebuild looks like.</p>
-      <a class="btn-primary" href="#contact" style="background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); color:#0A0E1A; font-weight:700; font-size:15px; padding:16px 32px; border-radius:10px; display:inline-block; margin-top:28px;">Book a free consultation</a>
+
+      <form onSubmit="{{handleSubmit}}" style="max-width:480px; margin:36px auto 0; text-align:left; display:flex; flex-direction:column; gap:16px;">
+        <div style="display:flex; gap:16px;">
+          <div style="flex:1;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#AEB8CE; margin-bottom:6px;">Name</label>
+            <input type="text" name="fullName" required placeholder="Your name" style="width:100%; background:#0A0E1A; border:1px solid rgba(255,255,255,0.14); border-radius:10px; padding:12px 14px; color:#F5F7FB; font-size:14.5px; font-family:'Manrope',sans-serif;"/>
+          </div>
+          <div style="flex:1;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#AEB8CE; margin-bottom:6px;">Email</label>
+            <input type="email" name="email" required placeholder="you@company.com" style="width:100%; background:#0A0E1A; border:1px solid rgba(255,255,255,0.14); border-radius:10px; padding:12px 14px; color:#F5F7FB; font-size:14.5px; font-family:'Manrope',sans-serif;"/>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px;">
+          <div style="flex:1;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#AEB8CE; margin-bottom:6px;">Company</label>
+            <input type="text" name="company" placeholder="Optional" style="width:100%; background:#0A0E1A; border:1px solid rgba(255,255,255,0.14); border-radius:10px; padding:12px 14px; color:#F5F7FB; font-size:14.5px; font-family:'Manrope',sans-serif;"/>
+          </div>
+          <div style="flex:1;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#AEB8CE; margin-bottom:6px;">I need help with</label>
+            <select name="need" style="width:100%; background:#0A0E1A; border:1px solid rgba(255,255,255,0.14); border-radius:10px; padding:12px 14px; color:#F5F7FB; font-size:14.5px; font-family:'Manrope',sans-serif;">
+              <option>AI-powered redesign</option>
+              <option>Process automation</option>
+              <option>Custom AI agents</option>
+              <option>IoT integration</option>
+              <option>Something else</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label style="display:block; font-size:13px; font-weight:600; color:#AEB8CE; margin-bottom:6px;">Tell us about your project</label>
+          <textarea name="details" required rows="4" placeholder="What are you working with, and what would you like to add AI to?" style="width:100%; background:#0A0E1A; border:1px solid rgba(255,255,255,0.14); border-radius:10px; padding:12px 14px; color:#F5F7FB; font-size:14.5px; font-family:'Manrope',sans-serif; resize:vertical;"></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); color:#0A0E1A; font-weight:700; font-size:15px; padding:16px 32px; border-radius:10px; border:none; cursor:pointer; font-family:'Manrope',sans-serif;">Book a free consultation</button>
+        <span style="font-size:12.5px; color:#7C8798;">This opens your email app with the details filled in, addressed to info@aibuildapp.net.</span>
+      </form>
     </div>
   </div>
 
@@ -351,5 +385,34 @@
 
 </div>
 </x-dc>
+<script data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      handleSubmit: (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const name = (f.fullName.value || '').trim();
+        const email = (f.email.value || '').trim();
+        const company = (f.company.value || '').trim();
+        const need = f.need.value;
+        const details = (f.details.value || '').trim();
+        const subject = 'Free consultation request - ' + name;
+        const lines = [
+          'Name: ' + name,
+          'Email: ' + email,
+          company ? ('Company: ' + company) : null,
+          'Interested in: ' + need,
+          '',
+          details
+        ].filter((x) => x !== null);
+        const body = lines.join('\n');
+        const mailto = 'mailto:info@aibuildapp.net?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        window.location.href = mailto;
+      }
+    };
+  }
+}
+</script>
 </body>
 </html>
