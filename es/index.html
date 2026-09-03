@@ -24,6 +24,9 @@
     .cta-link:hover { color: #22D3EE; }
     .card { transition: transform .15s ease, border-color .15s ease; }
     .card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.16); }
+    @keyframes pulseDot { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); } 70% { box-shadow: 0 0 0 9px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+    .chat-greet-close { background:none; border:none; color:#7C8798; font-size:14px; line-height:1; cursor:pointer; padding:0; }
+    .chat-greet-close:hover { color:#F5F7FB; }
   </style>
 
 </head>
@@ -414,14 +417,21 @@
         <button type="submit" style="background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); border:none; border-radius:8px; padding:9px 14px; color:#0A0E1A; font-weight:700; font-size:13.5px; cursor:pointer;">Enviar</button>
       </form>
     </div>
-    <button type="button" id="chatOpenBtn" style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); border:none; box-shadow:0 10px 30px rgba(99,102,241,0.45); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-      <svg width="26" height="26" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <rect x="14" y="16" width="20" height="18" rx="6" fill="none" stroke="#0A0E1A" stroke-width="2.4"/>
-        <line x1="24" y1="16" x2="24" y2="10" stroke="#0A0E1A" stroke-width="2.2"/>
-        <circle cx="24" cy="8" r="2.1" fill="#0A0E1A"/>
-        <circle cx="19" cy="25" r="1.9" fill="#0A0E1A"/><circle cx="29" cy="25" r="1.9" fill="#0A0E1A"/>
-      </svg>
-    </button>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div id="chatGreeting" style="display:flex; align-items:center; gap:8px; background:#10152A; border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:10px 8px 10px 14px; box-shadow:0 10px 30px rgba(0,0,0,0.4); max-width:200px; font-size:13.5px; line-height:1.4; color:#D8DEEC;">
+        <span>¿Tienes preguntas? ¡Pregúntame!</span>
+        <button type="button" class="chat-greet-close" id="chatGreetClose" aria-label="Cerrar">×</button>
+      </div>
+      <button type="button" id="chatOpenBtn" style="position:relative; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); border:none; box-shadow:0 10px 30px rgba(99,102,241,0.45); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <svg width="26" height="26" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <rect x="14" y="16" width="20" height="18" rx="6" fill="none" stroke="#0A0E1A" stroke-width="2.4"/>
+          <line x1="24" y1="16" x2="24" y2="10" stroke="#0A0E1A" stroke-width="2.2"/>
+          <circle cx="24" cy="8" r="2.1" fill="#0A0E1A"/>
+          <circle cx="19" cy="25" r="1.9" fill="#0A0E1A"/><circle cx="29" cy="25" r="1.9" fill="#0A0E1A"/>
+        </svg>
+        <span id="chatOnlineDot" style="position:absolute; top:2px; right:2px; width:13px; height:13px; border-radius:50%; background:#22C55E; border:2px solid #0A0E1A; animation:pulseDot 2s infinite;"></span>
+      </button>
+    </div>
   </div>
 
 </div>
@@ -460,6 +470,9 @@ document.getElementById('bookingFormEs').addEventListener('submit', function (e)
   var input = document.getElementById('chatInput');
   var openBtn = document.getElementById('chatOpenBtn');
   var closeBtn = document.getElementById('chatCloseBtn');
+  var greeting = document.getElementById('chatGreeting');
+  var greetClose = document.getElementById('chatGreetClose');
+  var onlineDot = document.getElementById('chatOnlineDot');
 
   function render() {
     list.innerHTML = '';
@@ -494,11 +507,20 @@ document.getElementById('bookingFormEs').addEventListener('submit', function (e)
   }
 
   function toggle() {
-    panel.style.display = (panel.style.display === 'none' || !panel.style.display) ? 'flex' : 'none';
+    var opening = (panel.style.display === 'none' || !panel.style.display);
+    panel.style.display = opening ? 'flex' : 'none';
+    if (opening) {
+      greeting.style.display = 'none';
+      onlineDot.style.display = 'none';
+    }
   }
 
   openBtn.addEventListener('click', toggle);
   closeBtn.addEventListener('click', toggle);
+  greetClose.addEventListener('click', function (e) {
+    e.stopPropagation();
+    greeting.style.display = 'none';
+  });
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var text = (input.value || '').trim();

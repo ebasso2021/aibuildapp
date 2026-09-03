@@ -25,6 +25,9 @@
     .cta-link:hover { color: #22D3EE; }
     .card { transition: transform .15s ease, border-color .15s ease; }
     .card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.16); }
+    @keyframes pulseDot { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.55); } 70% { box-shadow: 0 0 0 9px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+    .chat-greet-close { background:none; border:none; color:#7C8798; font-size:14px; line-height:1; cursor:pointer; padding:0; }
+    .chat-greet-close:hover { color:#F5F7FB; }
   </style>
 </helmet>
 
@@ -414,14 +417,21 @@
         <button type="submit" style="background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); border:none; border-radius:8px; padding:9px 14px; color:#0A0E1A; font-weight:700; font-size:13.5px; cursor:pointer;">Send</button>
       </form>
     </div>
-    <button onClick="{{toggleChat}}" style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); border:none; box-shadow:0 10px 30px rgba(99,102,241,0.45); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-      <svg width="26" height="26" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <rect x="14" y="16" width="20" height="18" rx="6" fill="none" stroke="#0A0E1A" stroke-width="2.4"/>
-        <line x1="24" y1="16" x2="24" y2="10" stroke="#0A0E1A" stroke-width="2.2"/>
-        <circle cx="24" cy="8" r="2.1" fill="#0A0E1A"/>
-        <circle cx="19" cy="25" r="1.9" fill="#0A0E1A"/><circle cx="29" cy="25" r="1.9" fill="#0A0E1A"/>
-      </svg>
-    </button>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div style="display:{{greetingDisplay}}; align-items:center; gap:8px; background:#10152A; border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:10px 8px 10px 14px; box-shadow:0 10px 30px rgba(0,0,0,0.4); max-width:200px; font-size:13.5px; line-height:1.4; color:#D8DEEC;">
+        <span>Got questions? Ask me!</span>
+        <button class="chat-greet-close" onClick="{{dismissGreeting}}" aria-label="Dismiss">×</button>
+      </div>
+      <button onClick="{{toggleChat}}" style="position:relative; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); border:none; box-shadow:0 10px 30px rgba(99,102,241,0.45); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <svg width="26" height="26" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <rect x="14" y="16" width="20" height="18" rx="6" fill="none" stroke="#0A0E1A" stroke-width="2.4"/>
+          <line x1="24" y1="16" x2="24" y2="10" stroke="#0A0E1A" stroke-width="2.2"/>
+          <circle cx="24" cy="8" r="2.1" fill="#0A0E1A"/>
+          <circle cx="19" cy="25" r="1.9" fill="#0A0E1A"/><circle cx="29" cy="25" r="1.9" fill="#0A0E1A"/>
+        </svg>
+        <span style="display:{{onlineDotDisplay}}; position:absolute; top:2px; right:2px; width:13px; height:13px; border-radius:50%; background:#22C55E; border:2px solid #0A0E1A; animation:pulseDot 2s infinite;"></span>
+      </button>
+    </div>
   </div>
 
 </div>
@@ -432,6 +442,7 @@ class Component extends DCLogic {
     super(props);
     this.state = {
       chatOpen: false,
+      greetingDismissed: false,
       chatDraft: '',
       chatMessages: [
         { from: 'bot', text: "Hi! I'm the Aibuildapp assistant. Ask me about AI redesigns, process automation, custom AI agents, or IoT — or I can help you book a free consultation." }
@@ -461,9 +472,12 @@ class Component extends DCLogic {
     }));
     return {
       chatDisplay: this.state.chatOpen ? 'flex' : 'none',
+      greetingDisplay: (!this.state.chatOpen && !this.state.greetingDismissed) ? 'flex' : 'none',
+      onlineDotDisplay: this.state.chatOpen ? 'none' : 'block',
       chatMessages: chatMessages,
       chatDraft: this.state.chatDraft,
-      toggleChat: () => this.setState({ chatOpen: !this.state.chatOpen }),
+      toggleChat: () => this.setState({ chatOpen: !this.state.chatOpen, greetingDismissed: true }),
+      dismissGreeting: (e) => { e.stopPropagation(); this.setState({ greetingDismissed: true }); },
       handleChatChange: (e) => this.setState({ chatDraft: e.target.value }),
       handleChatSend: (e) => {
         e.preventDefault();
