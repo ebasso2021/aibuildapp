@@ -383,12 +383,92 @@
     </div>
   </div>
 
+  <!-- AGENTE DE CHAT -->
+  <div style="position:fixed; bottom:24px; right:24px; z-index:9999; display:flex; flex-direction:column; align-items:flex-end; gap:16px;">
+    <div style="display:{{chatDisplay}}; flex-direction:column; width:340px; max-width:calc(100vw - 48px); background:#10152A; border:1px solid rgba(255,255,255,0.1); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,0.55); overflow:hidden;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7);">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="22" height="22" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="16" width="20" height="18" rx="6" fill="none" stroke="#0A0E1A" stroke-width="2.4"/>
+            <line x1="24" y1="16" x2="24" y2="10" stroke="#0A0E1A" stroke-width="2.2"/>
+            <circle cx="24" cy="8" r="2.1" fill="#0A0E1A"/>
+            <circle cx="19" cy="25" r="1.9" fill="#0A0E1A"/><circle cx="29" cy="25" r="1.9" fill="#0A0E1A"/>
+          </svg>
+          <span style="font-weight:700; font-size:14px; color:#0A0E1A;">Asistente de Aibuildapp</span>
+        </div>
+        <button onClick="{{toggleChat}}" style="background:none; border:none; color:#0A0E1A; font-size:20px; line-height:1; cursor:pointer; padding:0;">×</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; padding:14px 16px; max-height:280px; overflow-y:auto;">
+        <sc-for list="{{chatMessages}}" as="msg" hint-placeholder-count="1">
+          <div style="align-self:{{msg.align}}; max-width:85%; padding:9px 12px; border-radius:12px; font-size:13.5px; line-height:1.5; background:{{msg.bg}}; color:{{msg.color}};">{{msg.text}}</div>
+        </sc-for>
+      </div>
+      <form onSubmit="{{handleChatSend}}" style="display:flex; gap:8px; padding:12px; border-top:1px solid rgba(255,255,255,0.08);">
+        <input type="text" name="chatDraft" placeholder="Escribe una pregunta…" value="{{chatDraft}}" onChange="{{handleChatChange}}" style="flex:1; min-width:0; background:#0A0E1A; border:1px solid rgba(255,255,255,0.14); border-radius:8px; padding:9px 11px; color:#F5F7FB; font-size:13.5px; font-family:'Manrope',sans-serif;"/>
+        <button type="submit" style="background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); border:none; border-radius:8px; padding:9px 14px; color:#0A0E1A; font-weight:700; font-size:13.5px; cursor:pointer;">Enviar</button>
+      </form>
+    </div>
+    <button onClick="{{toggleChat}}" style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7); border:none; box-shadow:0 10px 30px rgba(99,102,241,0.45); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+      <svg width="26" height="26" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <rect x="14" y="16" width="20" height="18" rx="6" fill="none" stroke="#0A0E1A" stroke-width="2.4"/>
+        <line x1="24" y1="16" x2="24" y2="10" stroke="#0A0E1A" stroke-width="2.2"/>
+        <circle cx="24" cy="8" r="2.1" fill="#0A0E1A"/>
+        <circle cx="19" cy="25" r="1.9" fill="#0A0E1A"/><circle cx="29" cy="25" r="1.9" fill="#0A0E1A"/>
+      </svg>
+    </button>
+  </div>
+
 </div>
 </x-dc>
 <script data-dc-script>
 class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      chatOpen: false,
+      chatDraft: '',
+      chatMessages: [
+        { from: 'bot', text: '¡Hola! Soy el asistente de Aibuildapp. Pregúntame sobre rediseños con IA, automatización de procesos, agentes de IA personalizados o IoT — o te ayudo a reservar una consulta gratuita.' }
+      ]
+    };
+  }
+
+  chatReply(text) {
+    const t = text.toLowerCase();
+    if (/(agente|chatbot|\bbot\b)/.test(t)) return 'Diseñamos y desplegamos agentes de IA que realizan tareas reales — soporte, ingreso de datos, monitoreo, seguimiento. ¡Este chat es un ejemplo sencillo de uno!';
+    if (/(iot|dispositivo|sensor|hardware)/.test(t)) return 'Te ayudamos a conectar tus dispositivos y sensores IoT con tu software, y te acompañamos en el despliegue, monitoreo y escalado.';
+    if (/(automat|proceso|flujo)/.test(t)) return 'Identificamos los pasos manuales de tu negocio y los automatizamos — desde flujos internos hasta operaciones de cara al cliente.';
+    if (/(redise|sitio|app|reconstru)/.test(t)) return 'Reconstruimos sitios web y apps existentes con funciones de IA integradas — búsqueda más inteligente, personalización, chat, recomendaciones — sin empezar de cero.';
+    if (/(precio|costo|presupuesto|cuánto|cuanto)/.test(t)) return 'El precio depende del alcance, así que el mejor siguiente paso es una consulta gratuita — revisamos qué tienes y qué necesitas.';
+    if (/(reserva|consulta|contacto|correo|hablar|llamar)/.test(t)) return 'Puedes completar el formulario justo arriba de este chat, o escribir directamente a info@aibuildapp.net.';
+    if (/(gracias)/.test(t)) return '¡De nada! ¿Hay algo más en lo que pueda ayudarte?';
+    if (/\b(hola|buenas)\b/.test(t)) return '¡Hola! ¿Qué te gustaría saber — rediseños, automatización, agentes o IoT?';
+    return 'Soy un asistente simple integrado en esta página, así que puede que no capte todo. Para algo específico, el formulario de consulta gratuita más arriba o info@aibuildapp.net te pondrá en contacto directo con el equipo.';
+  }
+
   renderVals() {
+    const chatMessages = this.state.chatMessages.map((m) => ({
+      text: m.text,
+      align: m.from === 'user' ? 'flex-end' : 'flex-start',
+      bg: m.from === 'user' ? 'linear-gradient(135deg,#22D3EE,#6366F1 55%,#A855F7)' : '#0A0E1A',
+      color: m.from === 'user' ? '#0A0E1A' : '#D8DEEC'
+    }));
     return {
+      chatDisplay: this.state.chatOpen ? 'flex' : 'none',
+      chatMessages: chatMessages,
+      chatDraft: this.state.chatDraft,
+      toggleChat: () => this.setState({ chatOpen: !this.state.chatOpen }),
+      handleChatChange: (e) => this.setState({ chatDraft: e.target.value }),
+      handleChatSend: (e) => {
+        e.preventDefault();
+        const text = this.state.chatDraft.trim();
+        if (!text) return;
+        const botText = this.chatReply(text);
+        this.setState({
+          chatMessages: [...this.state.chatMessages, { from: 'user', text: text }, { from: 'bot', text: botText }],
+          chatDraft: ''
+        });
+      },
       handleSubmit: (e) => {
         e.preventDefault();
         const f = e.target;
