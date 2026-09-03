@@ -403,7 +403,7 @@
             <circle cx="24" cy="8" r="2.1" fill="#0A0E1A"/>
             <circle cx="19" cy="25" r="1.9" fill="#0A0E1A"/><circle cx="29" cy="25" r="1.9" fill="#0A0E1A"/>
           </svg>
-          <span style="font-weight:700; font-size:14px; color:#0A0E1A;">Asistente de Aibuildapp</span>
+          <span style="font-weight:700; font-size:14px; color:#0A0E1A;">Edward</span>
         </div>
         <button onClick="{{toggleChat}}" style="background:none; border:none; color:#0A0E1A; font-size:20px; line-height:1; cursor:pointer; padding:0;">×</button>
       </div>
@@ -445,7 +445,7 @@ class Component extends DCLogic {
       greetingDismissed: false,
       chatDraft: '',
       chatMessages: [
-        { from: 'bot', text: '¡Hola! Soy el asistente de Aibuildapp. Pregúntame sobre rediseños con IA, automatización de procesos, agentes de IA personalizados o IoT — o te ayudo a reservar una consulta gratuita.' }
+        { from: 'bot', text: '¡Hola! Soy Edward, el asistente de Aibuildapp. Pregúntame sobre rediseños con IA, automatización de procesos, agentes de IA personalizados o IoT — o te ayudo a reservar una consulta gratuita.' }
       ]
     };
   }
@@ -463,7 +463,7 @@ class Component extends DCLogic {
     if (/(reserva|consulta|contacto|correo|hablar|llamar)/.test(t)) return 'Puedes completar el formulario justo arriba de este chat, o escribir directamente a info@aibuildapp.net.';
     if (/(gracias)/.test(t)) return '¡De nada! ¿Hay algo más en lo que pueda ayudarte?';
     if (/\b(hola|buenas)\b/.test(t)) return '¡Hola! ¿Qué te gustaría saber — rediseños, automatización, agentes o IoT?';
-    return 'Soy un asistente simple integrado en esta página, así que puede que no capte todo. Para algo específico, el formulario de consulta gratuita más arriba o info@aibuildapp.net te pondrá en contacto directo con el equipo.';
+    return 'Soy Edward, un asistente simple integrado en esta página, así que puede que no capte todo. Para algo específico, el formulario de consulta gratuita más arriba o info@aibuildapp.net te pondrá en contacto directo con el equipo.';
   }
 
   renderVals() {

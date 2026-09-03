@@ -403,7 +403,7 @@
             <circle cx="24" cy="8" r="2.1" fill="#0A0E1A"/>
             <circle cx="19" cy="25" r="1.9" fill="#0A0E1A"/><circle cx="29" cy="25" r="1.9" fill="#0A0E1A"/>
           </svg>
-          <span style="font-weight:700; font-size:14px; color:#0A0E1A;">Aibuildapp Assistant</span>
+          <span style="font-weight:700; font-size:14px; color:#0A0E1A;">Edward</span>
         </div>
         <button onClick="{{toggleChat}}" style="background:none; border:none; color:#0A0E1A; font-size:20px; line-height:1; cursor:pointer; padding:0;">×</button>
       </div>
@@ -445,7 +445,7 @@ class Component extends DCLogic {
       greetingDismissed: false,
       chatDraft: '',
       chatMessages: [
-        { from: 'bot', text: "Hi! I'm the Aibuildapp assistant. Ask me about AI redesigns, process automation, custom AI agents, or IoT — or I can help you book a free consultation." }
+        { from: 'bot', text: "Hi! I'm Edward, the Aibuildapp assistant. Ask me about AI redesigns, process automation, custom AI agents, or IoT — or I can help you book a free consultation." }
       ]
     };
   }
@@ -463,7 +463,7 @@ class Component extends DCLogic {
     if (/(book|consult|contact|email|talk|call)/.test(t)) return "You can fill out the form just above this chat, or email info@aibuildapp.net directly.";
     if (/(thank)/.test(t)) return "You're welcome! Anything else I can help with?";
     if (/\b(hi|hello|hey)\b/.test(t)) return "Hi there! What would you like to know — redesigns, automation, agents, or IoT?";
-    return "I'm a simple assistant built into this page, so I might not catch everything. For anything specific, the free consultation form above or info@aibuildapp.net will reach the team directly.";
+    return "I'm Edward, a simple assistant built into this page, so I might not catch everything. For anything specific, the free consultation form above or info@aibuildapp.net will reach the team directly.";
   }
 
   renderVals() {
